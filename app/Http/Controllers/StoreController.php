@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class StoreController extends Controller
 {
@@ -23,6 +24,9 @@ class StoreController extends Controller
     }
 
     public function insert_product(Request $request){
+        if(!Gate::allows('insert-product')){
+            abort(403, 'Unauthorized');
+        }
         $request->validate([
             'name' => 'required|string|max:255',
             'details' => 'nullable|string',
@@ -74,6 +78,9 @@ class StoreController extends Controller
     }
 
     public function update_product(Request $request, $product_id){
+        if(!Gate::allows('update-product')){
+            abort(403, 'Unauthorized');
+        }
         // Validate the incoming request data
         $request->validate([
             'name' => 'required|string|max:255',
@@ -120,6 +127,9 @@ class StoreController extends Controller
     }
 
     public function delete_product($product_id){
+        if(!Gate::allows('delete-product')){
+            abort(403, 'Unauthorized');
+        }
         $product = Product::findOrFail($product_id);
         $product->delete();
         return redirect()->route('store')->with('success', 'Product deleted successfully!');

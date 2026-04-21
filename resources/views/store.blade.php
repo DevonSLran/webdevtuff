@@ -13,7 +13,9 @@
         <h2>{{ $pc->name }}</h2>
         <p>{{ $pc->description }}</p>
     @endforeach --}}
-    <a href="{{ route('product-insert-form') }}" class="btn btn-primary">Insert New Product</a>
+    @can('insert-product')
+        <a href="{{ route('product-insert-form') }}" class="btn btn-primary">Insert New Product</a> 
+    @endcan
     <div class="row row-cols-1 row-cols-md-3 g-4">
         @foreach ($products as $product)
             <div class="col">
@@ -25,11 +27,15 @@
                         <p class="card-text">{{ $product->details }}</p>
                         <p class="card-text">Rp {{ number_format($product->price, 2, ',') }}</p>
                         <p class="card-text">{{ $product->description }}</p>
+                        @can('update-product')
                         <a href="{{ route('product_edit_form', $product->id) }}" class="btn btn-warning">Edit Product</a>
+                        @endcan
                         <!-- Button trigger modal -->
+                            @can('delete-product')
                   <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $product->id }}">
                      Delete
                   </button>
+                    @endcan
 
                   <!-- Delete Confirmation Modal -->
                   <div class="modal fade" id="deleteModal{{ $product->id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ $product->id }}" aria-hidden="true">
